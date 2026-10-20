@@ -13,11 +13,11 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-d
 
 COPY . .
 
-RUN rm -rf bootstrap/cache/* \
+RUN mkdir -p resources/views storage/framework/cache storage/framework/sessions storage/framework/views \
+    && rm -rf bootstrap/cache/* \
     && php artisan config:cache \
     && php artisan route:cache \
-    && php artisan view:cache \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache resources/views
 
 ENV PORT=8080
 EXPOSE 8080
