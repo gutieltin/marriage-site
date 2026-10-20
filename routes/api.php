@@ -16,10 +16,13 @@ Route::prefix('admin')->middleware('admin.token')->group(function () {
 });
 Route::get('/admin-token-check', function () {
     return response()->json([
-        'token_configured' => (bool) config('wedding.admin_token'),
-        'token_length' => strlen(
-            (string) config('wedding.admin_token')
+        'config_file_exists' => file_exists(config_path('wedding.php')),
+        'config_file_path' => config_path('wedding.php'),
+        'config_has_admin_token' => array_key_exists(
+            'admin_token',
+            config('wedding', [])
         ),
+        'token_configured' => (bool) config('wedding.admin_token'),
     ]);
 });
 Route::get('/admin-env-check', function () {
