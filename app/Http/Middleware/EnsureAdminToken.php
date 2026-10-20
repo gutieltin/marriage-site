@@ -10,7 +10,7 @@ class EnsureAdminToken
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $token = config('wedding.admin_token');
+        $token = config('wedding.admin_token', config('admin_token'));
         $given = (string) $request->header('X-Admin-Token', '');
 
         if (! $token || ! hash_equals($token, $given)) {
