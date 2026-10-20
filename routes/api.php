@@ -15,14 +15,16 @@ Route::prefix('admin')->middleware('admin.token')->group(function () {
     Route::delete('/messages/{message}', [AdminController::class, 'destroyMessage']);
 });
 Route::get('/admin-token-check', function () {
+    $file = config_path('wedding.php');
+    $settings = require $file;
+
     return response()->json([
-        'config_file_exists' => file_exists(config_path('wedding.php')),
-        'config_file_path' => config_path('wedding.php'),
-        'config_has_admin_token' => array_key_exists(
-            'admin_token',
-            config('wedding', [])
-        ),
-        'token_configured' => (bool) config('wedding.admin_token'),
+        'config_file' => $file,
+        'loaded_config_has_token' => (bool) config('wedding.admin_token'),
+        'fresh_config_has_token' => (bool) ($settings['admin_token'] ?? null),
+        'environment_variable_exists' => (bool) env('WEDDING_ADMIN_TOKEN'),
+        'server_variable_exists' => (bool) ($_SERVER['WEDDING_ADMIN_TOKEN'] ?? null),
+        'env_array_variable_exists' => (bool) ($_ENV['WEDDING_ADMIN_TOKEN'] ?? null),
     ]);
 });
 Route::get('/admin-env-check', function () {
