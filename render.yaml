@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: wedding-api
+    plan: free
+    region: oregon
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://api.your-domain.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_DATABASE
+        value: wedding
+      - key: DB_USERNAME
+        value: wedding
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: DB_HOST
+        fromDatabase:
+          name: wedding-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: wedding-db
+          property: port
+      - key: WEDDING_ADMIN_TOKEN
+        generateValue: true
+      - key: WEDDING_FRONTEND_URL
+        value: https://your-project.vercel.app
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://your-project.vercel.app
+      - key: PORT
+        value: 8080
+
+databases:
+  - name: wedding-db
+    databaseName: wedding
+    user: wedding
+    plan: free
