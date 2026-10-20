@@ -22,3 +22,10 @@ Route::get('/admin-token-check', function () {
         ),
     ]);
 });
+Route::get('/admin-env-check', function () {
+    return response()->json([
+        'env_variable_exists' => (bool) env('WEDDING_ADMIN_TOKEN'),
+        'config_token_exists' => (bool) config('wedding.admin_token'),
+        'app_environment' => app()->environment(),
+    ]);
+});
