@@ -10,13 +10,19 @@ class EnsureAdminToken
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $token = config('wedding.admin_token', config('admin_token'));
+        $token = config('wedding.admin_token');
+
+        if (! is_string($token) || $token === '') {
+            $token = $_ENV['WEDDING_ADMIN_TOKEN'] ?? null;
+        }
+
         $given = (string) $request->header('X-Admin-Token', '');
 
-        if (! $token || ! hash_equals($token, $given)) {
+        if (! is_string($token) || $token === '' || ! hash_equals($token, $given)) {
             abort(401, 'Unauthorized');
         }
 
         return $next($request);
     }
 }
+
