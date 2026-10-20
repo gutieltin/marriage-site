@@ -14,3 +14,11 @@ Route::prefix('admin')->middleware('admin.token')->group(function () {
     Route::get('/messages/export', [AdminController::class, 'exportMessages']);
     Route::delete('/messages/{message}', [AdminController::class, 'destroyMessage']);
 });
+Route::get('/admin-token-check', function () {
+    return response()->json([
+        'token_configured' => (bool) config('wedding.admin_token'),
+        'token_length' => strlen(
+            (string) config('wedding.admin_token')
+        ),
+    ]);
+});
